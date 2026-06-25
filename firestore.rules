@@ -1,0 +1,56 @@
+// ==========================================================
+// firestore.rules
+// ==========================================================
+// انسخ المحتوى ده وحطه في:
+// Firebase Console > Firestore Database > Rules
+// ==========================================================
+//
+// ⚠️ تنويه أمان مهم:
+// بما إن الأدمن بيدخل بـ username/password ثابتين في كود الموقع نفسه
+// (مش عن طريق Firebase Authentication)، الـ Rules دي مستحيل تتحقق
+// "هل اللي بيكتب فعلاً عدّى من صفحة دخول الأدمن؟" لأن مفيش هوية
+// Firebase حقيقية بتتبعت من admin.html.
+//
+// عشان كده، الكتابة على /matches هنا مفتوحة بدون شرط تسجيل دخول.
+// ده يعني: أي حد يعرف رابط admin.html مباشرة (حتى من غير ما يعرف
+// الباسورد) يقدر يبعت طلبات كتابة مباشرة لقاعدة البيانات عن طريق
+// أدوات المطورين، من غير ما يلزمه يعدي من فورم تسجيل الدخول.
+// ده مقبول لمشروع بسيط بين مجموعة أصحاب موثوقين، لكن لو حابب حماية
+// أقوى فعلًا، قولّي وهظبط نظام يخلي الأدمن يدخل بـ Firebase Auth
+// حقيقي في الخلفية.
+// ==========================================================
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Users ----
+    match /users/{userId} {
+      // أي حد مسجل دخول يقدر يقرا بيانات أي يوزر (مطلوب للوحة الترتيب)
+      allow read: if request.auth != null;
+
+      // اليوزر يقدر يعمل بروفايله بس وقت التسجيل
+      allow create: if request.auth != null && request.auth.uid == userId;
+
+      // التحديث (خصم/إضافة نقاط) ممكن يحصل من اليوزر نفسه (وقت الرهان)
+      // أو من لوحة الأدمن (مفيهاش Firebase Auth، فبيبقى مفتوح هنا)
+      allow update: if true;
+
+      allow delete: if false;
+    }
+
+    // ---- Matches (لوحة الأدمن بتتحكم فيها، مفتوحة الكتابة) ----
+    match /matches/{matchId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // ---- Bets ----
+    match /bets/{betId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if true;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول الأدمن - دوري التسلية</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h1>لوحة الأدمن ⚙️</h1>
+    <p class="subtitle">سجّل دخولك كأدمن عشان تدير الماتشات</p>
+
+    <div class="error-msg" id="adminErrorMsg"></div>
+
+    <form onsubmit="handleAdminLogin(event)">
+      <div class="form-group">
+        <label>اليوزرنيم</label>
+        <input type="text" id="adminUsername" placeholder="اليوزرنيم" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>الباسورد</label>
+        <input type="password" id="adminPassword" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-primary">دخول</button>
+    </form>
+
+    <p class="switch-link">
+      <a href="index.html">رجوع لصفحة اللاعبين</a>
+    </p>
+  </div>
+</div>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/admin-auth.js"></script>
+
+</body>
+</html>

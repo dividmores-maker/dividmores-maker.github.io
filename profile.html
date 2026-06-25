@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دوري التسلية - الملف الشخصي</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+<canvas id="lightning-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function(){
+  var c=document.getElementById("lightning-canvas"),ctx=c.getContext("2d");
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  var COLORS=["#00f0ff","#b5179e","#39ff14","#ffffff"],bolts=[];
+  function hex(col){return[parseInt(col.slice(1,3),16),parseInt(col.slice(3,5),16),parseInt(col.slice(5,7),16)];}
+  function drawBolt(x1,y1,x2,y2,depth,col,alpha){
+    if(depth===0||alpha<0.015)return;
+    var dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
+    var mx=(x1+x2)/2+(Math.random()-.5)*len*0.45;
+    var my=(y1+y2)/2+(Math.random()-.5)*len*0.45;
+    var r=hex(col);
+    ctx.strokeStyle="rgba("+r[0]+","+r[1]+","+r[2]+","+alpha+")";
+    ctx.lineWidth=depth*0.55;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(mx,my);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(x2,y2);ctx.stroke();
+    drawBolt(x1,y1,mx,my,depth-1,col,alpha*0.82);
+    drawBolt(mx,my,x2,y2,depth-1,col,alpha*0.82);
+    if(Math.random()<0.38&&depth>1){
+      drawBolt(mx,my,mx+(Math.random()-.5)*180,my+Math.random()*140,depth-2,col,alpha*0.45);
+    }
+  }
+  function spawn(){
+    var col=COLORS[Math.floor(Math.random()*COLORS.length)];
+    var side=Math.floor(Math.random()*3),x1,y1,x2,y2;
+    if(side===0){x1=Math.random()*c.width;y1=0;x2=x1+(Math.random()-.5)*280;y2=Math.random()*c.height*0.65+c.height*0.1;}
+    else if(side===1){x1=0;y1=Math.random()*c.height;x2=Math.random()*c.width*0.55;y2=y1+(Math.random()-.5)*260;}
+    else{x1=c.width;y1=Math.random()*c.height;x2=c.width-Math.random()*c.width*0.55;y2=y1+(Math.random()-.5)*260;}
+    bolts.push({x1:x1,y1:y1,x2:x2,y2:y2,col:col,alpha:0.45+Math.random()*0.4,depth:4+Math.floor(Math.random()*3),life:0,max:5+Math.floor(Math.random()*8),flicker:Math.random()<0.5});
+  }
+  for(var i=0;i<3;i++)spawn();
+  function animate(){
+    requestAnimationFrame(animate);
+    ctx.fillStyle="rgba(6,6,16,0.2)";ctx.fillRect(0,0,c.width,c.height);
+    if(Math.random()<0.06)spawn();
+    for(var i=bolts.length-1;i>=0;i--){
+      var b=bolts[i];b.life++;
+      var fa=b.alpha*(1-b.life/b.max);
+      var vis=b.flicker?(b.life%2===0):true;
+      if(vis&&fa>0.01)drawBolt(b.x1,b.y1,b.x2,b.y2,b.depth,b.col,fa);
+      if(Math.random()<0.025){var r=hex(b.col);var gx=Math.random()*c.width,gy=Math.random()*c.height,gr=ctx.createRadialGradient(gx,gy,0,gx,gy,90+Math.random()*110);gr.addColorStop(0,"rgba("+r[0]+","+r[1]+","+r[2]+",0.035)");gr.addColorStop(1,"rgba("+r[0]+","+r[1]+","+r[2]+",0)");ctx.fillStyle=gr;ctx.fillRect(0,0,c.width,c.height);}
+      if(b.life>=b.max)bolts.splice(i,1);
+    }
+  }
+  animate();
+})();
+</script>
+
+<div class="topbar">
+  <div class="logo">دوري التسلية 🏆</div>
+  <div class="user-info">
+    <div class="points-badge">⭐ <span id="userPoints">0</span></div>
+    <button class="btn-secondary btn-sm" onclick="window.location.href='dashboard.html'">← الرئيسية</button>
+    <button class="btn-secondary btn-sm" onclick="handleLogout()">خروج</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- بطاقة البروفايل الرئيسية -->
+  <div class="profile-hero">
+    <div class="profile-avatar" id="profileAvatar">?</div>
+    <div class="profile-info">
+      <h2 id="profileName">...</h2>
+      <p id="profileEmail" class="profile-email">...</p>
+      <p id="profileSince" class="profile-since">...</p>
+      <div id="profileBadges" class="badges-row"></div>
+    </div>
+    <div class="profile-rank-block">
+      <div class="rank-number" id="profileRank">#-</div>
+      <div class="rank-label">ترتيبك في الدوري</div>
+    </div>
+  </div>
+
+  <!-- إحصائيات سريعة -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">⭐</div>
+      <div class="stat-value" id="statPoints">0</div>
+      <div class="stat-label">النقاط الحالية</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value" id="statWins">0</div>
+      <div class="stat-label">رهانات كسبتها</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">❌</div>
+      <div class="stat-value" id="statLosses">0</div>
+      <div class="stat-label">رهانات خسرتها</div>
+    </div>
+    <div class="stat-card highlight">
+      <div class="stat-icon">📊</div>
+      <div class="stat-value" id="statWinRate">0%</div>
+      <div class="stat-label">نسبة الكسب</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-value" id="statTotal">0</div>
+      <div class="stat-label">إجمالي الرهانات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-value" id="statProfit">0</div>
+      <div class="stat-label">صافي الربح/الخسارة</div>
+    </div>
+  </div>
+
+  <!-- شريط نسبة الكسب -->
+  <div class="win-bar-section">
+    <div class="win-bar-labels">
+      <span style="color:var(--success)">✅ كسب <span id="barWins">0</span></span>
+      <span style="color:var(--danger)">❌ خسارة <span id="barLosses">0</span></span>
+    </div>
+    <div class="win-bar-track">
+      <div class="win-bar-fill" id="winBarFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- التقويم الأسبوعي -->
+  <div id="weeklyCalendarContainer"></div>
+
+  <!-- الرسوم البيانية -->
+  <div class="section-title">📈 إحصائياتك بيانياً</div>
+  <div id="chartsSection"></div>
+
+  <!-- الألقاب والباجات -->
+  <div class="section-title">🏅 الألقاب والباجات</div>
+  <div id="allBadgesContainer" class="all-badges-grid"></div>
+
+  <!-- سجل الرهانات -->
+  <div class="section-title">📜 سجل الرهانات</div>
+  <div id="betsHistoryContainer"></div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/badges.js"></script>
+<script src="js/weekly-calendar.js"></script>
+<script src="js/daily-reward.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/particles.js"></script>
+<script>
+  requireAuth(async (user) => {
+    await loadProfile(user);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دوري التسلية - ملف اللاعب</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/profile.css">
+<style>
+  .public-header {
+    text-align: center;
+    padding: 40px 20px 20px;
+  }
+  .share-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(108,92,231,0.15);
+    border: 1px solid rgba(108,92,231,0.4);
+    color: var(--primary); border-radius: 10px;
+    padding: 10px 20px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.2s; margin-top: 12px;
+  }
+  .share-btn:hover { background: rgba(108,92,231,0.25); transform: translateY(-2px); }
+  .join-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(90deg, var(--primary), #8474f0);
+    color: white; border: none; border-radius: 10px;
+    padding: 12px 28px; font-size: 15px; font-weight: 800;
+    cursor: pointer; font-family: inherit; margin: 8px;
+    transition: all 0.2s; text-decoration: none;
+  }
+  .join-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+  .public-badge { text-align: center; padding: 20px; color: var(--text-secondary); font-size: 13px; }
+</style>
+</head>
+<body>
+<canvas id="lightning-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function(){
+  var c=document.getElementById("lightning-canvas"),ctx=c.getContext("2d");
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  var COLORS=["#00f0ff","#b5179e","#39ff14","#ffffff"],bolts=[];
+  function hex(col){return[parseInt(col.slice(1,3),16),parseInt(col.slice(3,5),16),parseInt(col.slice(5,7),16)];}
+  function drawBolt(x1,y1,x2,y2,depth,col,alpha){
+    if(depth===0||alpha<0.015)return;
+    var dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
+    var mx=(x1+x2)/2+(Math.random()-.5)*len*0.45;
+    var my=(y1+y2)/2+(Math.random()-.5)*len*0.45;
+    var r=hex(col);
+    ctx.strokeStyle="rgba("+r[0]+","+r[1]+","+r[2]+","+alpha+")";
+    ctx.lineWidth=depth*0.55;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(mx,my);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(x2,y2);ctx.stroke();
+    drawBolt(x1,y1,mx,my,depth-1,col,alpha*0.82);
+    drawBolt(mx,my,x2,y2,depth-1,col,alpha*0.82);
+    if(Math.random()<0.38&&depth>1){
+      drawBolt(mx,my,mx+(Math.random()-.5)*180,my+Math.random()*140,depth-2,col,alpha*0.45);
+    }
+  }
+  function spawn(){
+    var col=COLORS[Math.floor(Math.random()*COLORS.length)];
+    var side=Math.floor(Math.random()*3),x1,y1,x2,y2;
+    if(side===0){x1=Math.random()*c.width;y1=0;x2=x1+(Math.random()-.5)*280;y2=Math.random()*c.height*0.65+c.height*0.1;}
+    else if(side===1){x1=0;y1=Math.random()*c.height;x2=Math.random()*c.width*0.55;y2=y1+(Math.random()-.5)*260;}
+    else{x1=c.width;y1=Math.random()*c.height;x2=c.width-Math.random()*c.width*0.55;y2=y1+(Math.random()-.5)*260;}
+    bolts.push({x1:x1,y1:y1,x2:x2,y2:y2,col:col,alpha:0.45+Math.random()*0.4,depth:4+Math.floor(Math.random()*3),life:0,max:5+Math.floor(Math.random()*8),flicker:Math.random()<0.5});
+  }
+  for(var i=0;i<3;i++)spawn();
+  function animate(){
+    requestAnimationFrame(animate);
+    ctx.fillStyle="rgba(6,6,16,0.2)";ctx.fillRect(0,0,c.width,c.height);
+    if(Math.random()<0.06)spawn();
+    for(var i=bolts.length-1;i>=0;i--){
+      var b=bolts[i];b.life++;
+      var fa=b.alpha*(1-b.life/b.max);
+      var vis=b.flicker?(b.life%2===0):true;
+      if(vis&&fa>0.01)drawBolt(b.x1,b.y1,b.x2,b.y2,b.depth,b.col,fa);
+      if(Math.random()<0.025){var r=hex(b.col);var gx=Math.random()*c.width,gy=Math.random()*c.height,gr=ctx.createRadialGradient(gx,gy,0,gx,gy,90+Math.random()*110);gr.addColorStop(0,"rgba("+r[0]+","+r[1]+","+r[2]+",0.035)");gr.addColorStop(1,"rgba("+r[0]+","+r[1]+","+r[2]+",0)");ctx.fillStyle=gr;ctx.fillRect(0,0,c.width,c.height);}
+      if(b.life>=b.max)bolts.splice(i,1);
+    }
+  }
+  animate();
+})();
+</script>
+
+<div class="topbar">
+  <div class="logo">دوري التسلية 🏆</div>
+  <div class="user-info">
+    <a href="index.html" class="join-btn">انضم للدوري 🎮</a>
+  </div>
+</div>
+
+<div class="container">
+  <div id="publicProfileContent">
+    <div class="loading">جاري تحميل الملف الشخصي...</div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/badges.js"></script>
+<script src="js/particles.js"></script>
+<script>
+async function loadPublicProfile() {
+  const params = new URLSearchParams(window.location.search);
+  const uid    = params.get('uid');
+  const container = document.getElementById('publicProfileContent');
+
+  if (!uid) {
+    container.innerHTML = '<div class="empty-state">❌ مفيش ملف شخصي هنا</div>';
+    return;
+  }
+
+  try {
+    const userDoc = await db.collection('users').doc(uid).get();
+    if (!userDoc.exists) {
+      container.innerHTML = '<div class="empty-state">❌ اللاعب ده مش موجود</div>';
+      return;
+    }
+
+    const userData = userDoc.data();
+    const name     = userData.name || 'لاعب';
+
+    // جيب رهاناته
+    const betsSnap = await db.collection('bets').where('userId', '==', uid).get();
+    const bets     = betsSnap.docs.map(d => d.data());
+    const wins     = bets.filter(b => b.status === 'won').length;
+    const losses   = bets.filter(b => b.status === 'lost').length;
+    const total    = bets.length;
+    const winRate  = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+    // الترتيب
+    const allSnap  = await db.collection('users').orderBy('points', 'desc').get();
+    let rank = 1;
+    allSnap.forEach(doc => {
+      if (doc.id !== uid && (doc.data().points||0) > (userData.points||0)) rank++;
+    });
+
+    const stats = { points: userData.points||0, wins, losses, total, winRate };
+    const medals = { 1:'🥇', 2:'🥈', 3:'🥉', 4:'🏅', 5:'🏅' };
+
+    // عنوان الصفحة
+    document.title = `${name} - دوري التسلية`;
+
+    container.innerHTML = `
+      <!-- بطاقة البروفايل -->
+      <div class="profile-hero">
+        <div class="profile-avatar">${name.charAt(0).toUpperCase()}</div>
+        <div class="profile-info">
+          <h2>${name}</h2>
+          <p class="profile-since">لاعب في دوري التسلية</p>
+          <div id="pubBadgesRow" class="badges-row"></div>
+        </div>
+        <div class="profile-rank-block">
+          <div class="rank-number">${(medals[rank]||'') + ' #' + rank}</div>
+          <div class="rank-label">من ${allSnap.size} لاعب</div>
+        </div>
+      </div>
+
+      <!-- إحصائيات -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value">${userData.points||0}</div>
+          <div class="stat-label">النقاط</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value">${wins}</div>
+          <div class="stat-label">كسب</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">❌</div>
+          <div class="stat-value">${losses}</div>
+          <div class="stat-label">خسارة</div>
+        </div>
+        <div class="stat-card highlight">
+          <div class="stat-icon">📊</div>
+          <div class="stat-value">${winRate}%</div>
+          <div class="stat-label">نسبة الكسب</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value">${total}</div>
+          <div class="stat-label">إجمالي الرهانات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏅</div>
+          <div class="stat-value">${getEarnedBadges(stats).length}</div>
+          <div class="stat-label">باجات مكتسبة</div>
+        </div>
+      </div>
+
+      <!-- شريط الكسب -->
+      <div class="win-bar-section">
+        <div class="win-bar-labels">
+          <span style="color:var(--success)">✅ كسب ${wins}</span>
+          <span style="color:var(--danger)">❌ خسارة ${losses}</span>
+        </div>
+        <div class="win-bar-track">
+          <div class="win-bar-fill" id="pubWinBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- الباجات -->
+      <div class="section-title">🏅 الألقاب والباجات</div>
+      <div id="pubBadgesGrid" class="all-badges-grid"></div>
+
+      <!-- زرار مشاركة + انضمام -->
+      <div style="text-align:center; padding: 20px 0 40px;">
+        <button class="share-btn" onclick="shareProfile()">🔗 شارك الملف الشخصي</button>
+        <br>
+        <a href="index.html" class="join-btn">انضم للدوري وتحدّاه! 🎮</a>
+      </div>
+    `;
+
+    // ارسم الباجات
+    renderEarnedBadgesRow(stats, document.getElementById('pubBadgesRow'));
+    renderAllBadges(stats, document.getElementById('pubBadgesGrid'));
+
+    // شريط الكسب
+    setTimeout(() => {
+      document.getElementById('pubWinBar').style.width = winRate + '%';
+    }, 300);
+
+  } catch (err) {
+    container.innerHTML = `<div class="empty-state">حصل خطأ: ${err.message}</div>`;
+  }
+}
+
+function shareProfile() {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: 'ملفي في دوري التسلية', url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('تم نسخ الرابط! 🔗');
+    });
+  }
+}
+
+loadPublicProfile();
+</script>
+</body>
+</html>

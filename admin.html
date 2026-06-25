@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دوري التسلية - لوحة الأدمن</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">لوحة الأدمن ⚙️</div>
+  <div class="user-info">
+    <button class="btn-secondary btn-sm" onclick="handleAdminLogout()">خروج</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs" style="margin-bottom:24px;">
+    <div class="tab active" id="tab-manage" onclick="switchAdminTab('manage')">⚙️ إدارة الماتشات</div>
+    <div class="tab" id="tab-analytics" onclick="switchAdminTab('analytics')">📊 التحليلات</div>
+  </div>
+  <div id="content-analytics" class="hidden">
+    <div id="analyticsContainer"></div>
+  </div>
+  <div id="content-manage">
+
+  <div class="admin-panel">
+    <div class="section-title">➕ إضافة ماتش جديد</div>
+    <form id="addMatchForm" onsubmit="handleAddMatch(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>اللعبة</label>
+          <select id="matchGame"></select>
+        </div>
+        <div class="form-group">
+          <label>ملاحظات (اختياري)</label>
+          <input type="text" id="matchNotes" placeholder="مثلاً: نص نهائي الدوري">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>اللاعب الأول</label>
+          <input type="text" id="matchPlayer1" placeholder="اسم اللاعب الأول" required>
+        </div>
+        <div class="form-group">
+          <label>اللاعب التاني</label>
+          <input type="text" id="matchPlayer2" placeholder="اسم اللاعب التاني" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" id="addMatchBtn">إضافة الماتش</button>
+    </form>
+  </div>
+
+  <div class="section-title">📋 إدارة الماتشات</div>
+  <div id="adminMatchesContainer" class="matches-grid"></div>
+
+  </div><!-- end content-manage -->
+</div><!-- end tabs-wrapper -->
+
+<!-- Firebase SDKs (للوصول لـ Firestore بس، مش للـ Authentication) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  function switchAdminTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('content-manage').classList.toggle('hidden', tab !== 'manage');
+    document.getElementById('content-analytics').classList.toggle('hidden', tab !== 'analytics');
+    if (tab === 'analytics') loadAnalytics();
+  }
+
+  if (requireAdminSession()) {
+    populateGamesSelect();
+    loadAdminMatches();
+  }
+</script>
+
+</body>
+</html>
