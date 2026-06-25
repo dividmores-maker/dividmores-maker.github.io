@@ -1,0 +1,156 @@
+/* ==========================================================
+   games.css - كروت الألعاب فقط - لا تعدل على الملف ده
+   ========================================================== */
+
+.container {
+  max-width: 100% !important;
+  padding: 20px 28px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#matchesContainer {
+  width: 100% !important;
+  display: block !important;
+}
+
+#matchesContainer .games-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  width: 100% !important;
+  direction: ltr !important;
+}
+
+#matchesContainer .game-card {
+  direction: rtl !important;
+  height: 260px !important;
+  width: 100% !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  cursor: pointer !important;
+  border: 2px solid rgba(108,92,231,0.2) !important;
+  background: #1A1925 !important;
+  transition: transform 0.15s ease, border-color 0.3s, box-shadow 0.3s !important;
+}
+
+#matchesContainer .game-card:hover {
+  border-color: #6C5CE7 !important;
+  box-shadow: 0 20px 50px rgba(108,92,231,0.3) !important;
+}
+
+#matchesContainer .game-card .game-card-img-wrap {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+#matchesContainer .game-card .game-card-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+}
+
+#matchesContainer .game-card:hover .game-card-img {
+  transform: scale(1.06) !important;
+}
+
+#matchesContainer .game-card .game-card-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%) !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  padding: 18px !important;
+  z-index: 2 !important;
+  transition: background 0.3s !important;
+}
+
+#matchesContainer .game-card:hover .game-card-overlay {
+  background: linear-gradient(to top, rgba(108,92,231,0.75) 0%, transparent 65%) !important;
+}
+
+#matchesContainer .game-card .game-card-name {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8) !important;
+  margin: 0 !important;
+}
+
+#matchesContainer .game-card .game-card-no-img {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
+  gap: 12px !important;
+}
+
+/* فورم الرهان */
+.bet-form .bet-points-row {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 8px !important;
+  align-items: center !important;
+  margin-top: 10px !important;
+}
+.bet-form .bet-points-row input { flex: 1 !important; min-width: 0 !important; }
+.bet-form .place-bet-btn { width: auto !important; flex: 0 0 auto !important; padding: 12px 20px !important; }
+
+/* زرار الرجوع */
+.back-to-games {
+  display: inline-flex !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  margin-bottom: 16px !important;
+}
+
+/* عداد الإشعارات */
+.notif-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #E74C3C;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  padding: 0 5px;
+  margin-right: 4px;
+  vertical-align: middle;
+  animation: notif-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 8px rgba(231,76,60,0.6);
+}
+
+@keyframes notif-pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* responsive */
+@media (max-width: 1100px) {
+  #matchesContainer .games-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 750px) {
+  #matchesContainer .games-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 480px) {
+  #matchesContainer .games-grid { grid-template-columns: 1fr !important; }
+}

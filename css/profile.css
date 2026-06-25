@@ -1,0 +1,475 @@
+/* ==========================================================
+   profile.css - تصميم صفحة الملف الشخصي
+   ========================================================== */
+
+/* ===== بطاقة البروفايل الرئيسية ===== */
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: linear-gradient(135deg, #1A1925 0%, #1e1c2e 60%, #141320 100%);
+  border: 1px solid rgba(108,92,231,0.3);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(108,92,231,0.12);
+}
+
+.profile-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(108,92,231,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.profile-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(0,206,201,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 900;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(108,92,231,0.4);
+  position: relative;
+  z-index: 1;
+  animation: avatar-float 4s ease-in-out infinite;
+}
+
+@keyframes avatar-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.profile-info {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-info h2 {
+  font-size: 26px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #fff, #c8c4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+
+.profile-email {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.profile-since {
+  color: rgba(164,161,181,0.6);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.badges-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.profile-rank-block {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.rank-number {
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), #f0a500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.rank-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== شبكة الإحصائيات ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stat-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+.stat-card:hover::before { opacity: 1; }
+
+.stat-card.highlight {
+  background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(0,206,201,0.08));
+  border-color: rgba(108,92,231,0.4);
+  box-shadow: 0 4px 20px rgba(108,92,231,0.15);
+}
+
+.stat-icon  { font-size: 24px; margin-bottom: 8px; }
+.stat-value {
+  font-size: 28px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff, #c8c4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 12px; color: var(--text-secondary); }
+
+/* ===== شريط نسبة الكسب ===== */
+.win-bar-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.win-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.win-bar-track {
+  height: 10px;
+  background: rgba(231,76,60,0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.win-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--success), #27ae60);
+  border-radius: 10px;
+  transition: width 1s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 0 12px rgba(46,204,113,0.4);
+}
+
+/* ===== شبكة الباجات ===== */
+.all-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+/* ===== سجل الرهانات ===== */
+.bets-history-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.bet-history-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr 100px 70px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.bet-history-row:last-child { border-bottom: none; }
+.bet-history-row:hover { background: var(--bg-card-hover); }
+
+.bet-history-status { font-weight: 800; }
+.bet-history-match  { color: var(--text-primary); font-weight: 600; }
+.bet-history-pick   { color: var(--text-secondary); }
+.bet-history-profit { font-weight: 800; text-align: left; }
+.bet-history-date   { color: rgba(164,161,181,0.5); font-size: 11px; text-align: left; }
+
+/* ===== إشعارات ===== */
+.notification-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--danger);
+  border-radius: 50%;
+  margin-right: 4px;
+  animation: notif-pulse 1.5s ease-in-out infinite;
+  vertical-align: middle;
+}
+@keyframes notif-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(231,76,60,0.6); }
+  50%     { box-shadow: 0 0 0 5px rgba(231,76,60,0); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 700px) {
+  .profile-hero    { flex-direction: column; text-align: center; }
+  .badges-row      { justify-content: center; }
+  .stats-grid      { grid-template-columns: repeat(2, 1fr); }
+  .bet-history-row { grid-template-columns: 1fr 1fr; font-size: 12px; }
+  .bet-history-pick, .bet-history-date { display: none; }
+  .all-badges-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+
+/* ===== الرسوم البيانية ===== */
+.charts-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* دونات شارت */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.donut-svg { flex-shrink: 0; }
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.donut-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* بار شارت */
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.bar-label {
+  width: 70px;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 1s cubic-bezier(0.23,1,0.32,1);
+}
+
+.bar-val {
+  font-size: 11px;
+  color: var(--text-secondary);
+  width: 30px;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .charts-section { grid-template-columns: 1fr; }
+}
+
+/* ===== التقويم الأسبوعي ===== */
+.weekly-calendar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.cal-day {
+  border-radius: 14px;
+  padding: 14px 8px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  user-select: none;
+}
+
+/* اليوم الحالي - قابل للضغط */
+.cal-day.today {
+  background: linear-gradient(135deg, rgba(253,203,110,0.2), rgba(240,165,0,0.1));
+  border-color: rgba(253,203,110,0.6);
+  cursor: pointer;
+  animation: today-pulse 2s ease-in-out infinite;
+}
+.cal-day.today:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 8px 24px rgba(253,203,110,0.35);
+}
+
+@keyframes today-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(253,203,110,0.4); }
+  50%      { box-shadow: 0 0 0 8px rgba(253,203,110,0);  }
+}
+
+/* تم الاستلام */
+.cal-day.claimed {
+  background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.05));
+  border-color: rgba(46,204,113,0.4);
+  cursor: default;
+}
+
+/* أيام فاتت بدون استلام */
+.cal-day.past {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.05);
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* أيام جاية */
+.cal-day.future {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.06);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cal-day-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.cal-day-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+.cal-day-date {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.cal-day-pts {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--success);
+  margin-top: 4px;
+}
+
+.cal-day.today .cal-day-name,
+.cal-day.today .cal-day-date { color: #FDCB6E; }
+
+@media (max-width: 600px) {
+  .calendar-days { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day { padding: 10px 4px; border-radius: 10px; }
+  .cal-day-icon { font-size: 18px; }
+  .cal-day-name { font-size: 9px; }
+  .cal-day-date { font-size: 11px; }
+}
+
+/* ===== أيام فاتت ومستلمتهاش - أوضح ===== */
+.cal-day.past {
+  background: rgba(231,76,60,0.05) !important;
+  border-color: rgba(231,76,60,0.15) !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.5) !important;
+}
+
+.cal-day.past .cal-day-icon { filter: grayscale(1); }
