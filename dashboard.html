@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<script src="https://quge5.com/88/tag.min.js" data-zone="253482" async data-cfasync="false"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>دوري التسلية - الرئيسية</title>
@@ -61,10 +62,9 @@
 <div class="topbar">
   <div class="logo">دوري التسلية 🏆</div>
   <div class="user-info">
-    <div class="points-badge" onclick="showPointsHistory()" title="اضغط لعرض سجل نقاطك" style="cursor:pointer;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''">⭐ <span id="userPoints">0</span></div>
+    <div class="points-badge">⭐ <span id="userPoints">0</span></div>
     <span id="userName" style="font-size:14px; color:var(--text-secondary);"></span>
     <div id="soundBtnContainer"></div>
-    <div id="adRewardBtnContainer"></div>
     <button class="btn-secondary btn-sm" onclick="window.location.href='profile.html'">👤 بروفايلي</button>
     <button class="btn-secondary btn-sm" onclick="handleLogout()">خروج</button>
   </div>
@@ -103,14 +103,12 @@
 <script src="js/commentary.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/matches.js"></script>
-<script src="js/ad-reward.js"></script>
 <script>
   requireAuth(async (user) => {
     await loadUserHeader(user);
     await loadMatches();
     if (typeof initDailyReward !== 'undefined') initDailyReward(user.uid);
     if (typeof renderSoundButton !== 'undefined') renderSoundButton('soundBtnContainer');
-    if (typeof renderAdRewardButton !== 'undefined') renderAdRewardButton('adRewardBtnContainer', user.uid);
   });
 </script>
 
